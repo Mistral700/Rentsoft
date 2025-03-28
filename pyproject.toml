@@ -10,7 +10,8 @@ requires-python = ">=3.11"
 dependencies = [
     "djangorestframework (>=3.15.2,<4.0.0)",
     "psycopg (>=3.2.6,<4.0.0)",
-    "djangorestframework-simplejwt (>=5.5.0,<6.0.0)"
+    "djangorestframework-simplejwt (>=5.5.0,<6.0.0)",
+    "pylint (>=3.3.6,<4.0.0)"
 ]
 
 

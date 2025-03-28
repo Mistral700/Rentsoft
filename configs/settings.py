@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     'apps.auth',
+    'apps.advertisements',
     'apps.users',
     'core',
 ]
@@ -86,11 +87,11 @@ WSGI_APPLICATION = 'configs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASS'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT')
+        'NAME': os.environ.get('DB_NAME') or "rent_id",
+        'USER': os.environ.get('DB_USER') or "user",
+        'PASSWORD': os.environ.get('DB_PASS') or "user",
+        'HOST': os.environ.get('DB_HOST') or "db",
+        'PORT': os.environ.get('DB_PORT') or "5432"
     }
 }
 

@@ -34,7 +34,11 @@ class FuelTypeListCreateView(ListCreateAPIView):
 
 
 class AdvertisementsListView(ListAPIView):
-    queryset = AdvertisementModel.objects.all()
+    queryset = AdvertisementModel.objects.select_related(
+        'user',
+        'transmission',
+        'category',
+    ).prefetch_related('fuel_type').all()
     serializer_class = AdvertisementSerializer
 
 

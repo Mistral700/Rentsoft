@@ -36,6 +36,13 @@ class CategoryModel(models.Model):
         return f'{self.name}'
 
 
+class StatusModel(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class AdvertisementModel(models.Model):
     car_brand = models.CharField(max_length=128)
     car_model = models.CharField(max_length=128)
@@ -62,6 +69,11 @@ class AdvertisementModel(models.Model):
         UserModel,
         on_delete=models.CASCADE,
         related_name='advertisement_user'
+    )
+    status = models.ForeignKey(
+        StatusModel,
+        on_delete=models.CASCADE,
+        related_name='advertisement_status'
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

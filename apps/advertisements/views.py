@@ -5,13 +5,15 @@ from apps.advertisements.models import (
     AdvertisementModel,
     CategoryModel,
     TransmissionModel,
-    FuelTypeModel
+    FuelTypeModel,
+    StatusModel,
 )
 from apps.advertisements.serializers import (
     AdvertisementSerializer,
     CategorySerializer,
     TransmissionSerializer,
-    FuelTypeSerializer
+    FuelTypeSerializer,
+    StatusSerializer,
 )
 
 
@@ -33,11 +35,18 @@ class FuelTypeListCreateView(ListCreateAPIView):
     permission_classes = (IsAdminUser,)
 
 
+class StatusListCreateView(ListCreateAPIView):
+    queryset = StatusModel.objects.all()
+    serializer_class = StatusSerializer
+    permission_classes = (IsAdminUser,)
+
+
 class AdvertisementsListView(ListAPIView):
     queryset = AdvertisementModel.objects.select_related(
         'user',
         'transmission',
         'category',
+        'status'
     ).prefetch_related('fuel_type').all()
     serializer_class = AdvertisementSerializer
 
@@ -49,7 +58,8 @@ class MineAdvertisementListCreateView(ListCreateAPIView):
         return AdvertisementModel.objects.select_related(
             'transmission',
             'category',
-            'user'
+            'user',
+            'status'
         ).prefetch_related('fuel_type').filter(user=self.request.user)
 
     def perform_create(self, serializer):
@@ -64,5 +74,6 @@ class MineAdvertisementGetUpdateDestroy(RetrieveUpdateDestroyAPIView):
         return AdvertisementModel.objects.select_related(
             'transmission',
             'category',
-            'user'
+            'user',
+            'status'
         ).prefetch_related('fuel_type').filter(user=self.request.user)

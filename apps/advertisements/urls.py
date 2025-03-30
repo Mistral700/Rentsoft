@@ -6,7 +6,8 @@ from apps.advertisements.views import (
     MineAdvertisementGetUpdateDestroy,
     CategoryListCreateView,
     TransmissionListCreateView,
-    FuelTypeListCreateView
+    FuelTypeListCreateView,
+    StatusListCreateView,
 )
 
 
@@ -18,4 +19,5 @@ urlpatterns = [
     path('/categories', CategoryListCreateView.as_view(), name='list_create_categories'),
     path('/transmissions', TransmissionListCreateView.as_view(), name='list_create_transmissions'),
     path('/fuel_types', FuelTypeListCreateView.as_view(), name='list_create_fuel_types'),
+    path('/statuses', StatusListCreateView.as_view(), name='list_create_statuses'),
 ]

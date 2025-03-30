@@ -4,7 +4,8 @@ from apps.advertisements.models import (
     AdvertisementModel,
     CategoryModel,
     TransmissionModel,
-    FuelTypeModel
+    FuelTypeModel,
+    StatusModel,
 )
 
 from core.dataclasses.user_dataclasses import User
@@ -28,6 +29,12 @@ class FuelTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
+class StatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StatusModel
+        fields = ('id', 'name',)
+
+
 class UserAdvertisementSerializer(serializers.RelatedField):
     def to_representation(self, value: User):
         return {'id': value.id, 'email': value.email}
@@ -44,6 +51,9 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(
         queryset=CategoryModel.objects.all(),
     )
+    status = serializers.PrimaryKeyRelatedField(
+        queryset=StatusModel.objects.all(),
+    )
     user = UserAdvertisementSerializer(read_only=True)
 
     class Meta:
@@ -51,7 +61,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         fields = ('id', 'car_brand', 'car_model', 'engine', 'price',
                   'price_period', 'pledge', 'purpose', 'driver', 'comment',
                   'location', 'fuel_type', 'transmission', 'category', 'user',
-                  'created_at', 'updated_at',)
+                  'status', 'created_at', 'updated_at',)
 
         read_only_fields = ('id', 'created_at', 'updated_at', 'user',)
 

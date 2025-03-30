@@ -5,13 +5,15 @@ from apps.advertisements.models import (
     AdvertisementModel,
     CategoryModel,
     TransmissionModel,
-    FuelTypeModel, StatusModel
+    FuelTypeModel,
+    StatusModel,
 )
 from apps.advertisements.serializers import (
     AdvertisementSerializer,
     CategorySerializer,
     TransmissionSerializer,
-    FuelTypeSerializer, StatusSerializer
+    FuelTypeSerializer,
+    StatusSerializer,
 )
 
 

@@ -2,12 +2,13 @@ FROM python:3.11-alpine
 
 ENV PYTHONUNBUFFERED=1
 
-RUN apk update
-
 RUN apk update && apk add --no-cache \
     gcc \
     musl-dev \
     postgresql-dev
+
+#For Pillow
+RUN apk add --no-cache jpeg-dev zlib-dev libjpeg
 
 RUN mkdir /app
 WORKDIR /app

@@ -17,6 +17,15 @@ def adverts_swagger():
     )
 
 
+def advert_swagger():
+    return method_decorator(
+        swagger_auto_schema(responses={
+            status.HTTP_201_CREATED: AdvertisementSerializer()
+        }),
+        'post'
+    )
+
+
 def adverts_partial_update_swagger():
     return method_decorator(
         swagger_auto_schema(request_body=AdvertUpdateSerializer, responses={

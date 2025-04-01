@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from apps.advertisements.models import (
     AdvertisementModel,
+    AdvertisementPhotoModel,
     CategoryModel,
     TransmissionModel,
     FuelTypeModel,
@@ -40,6 +41,15 @@ class UserAdvertisementSerializer(serializers.RelatedField):
         return {'id': value.id, 'email': value.email}
 
 
+class AdvertPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdvertisementPhotoModel
+        fields = ('photo',)
+
+    def to_representation(self, instance):
+        return {'id': instance.id, 'url': instance.photo.url}
+
+
 class AdvertisementSerializer(serializers.ModelSerializer):
     fuel_type = serializers.PrimaryKeyRelatedField(
         queryset=FuelTypeModel.objects.all(),
@@ -55,13 +65,13 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         queryset=StatusModel.objects.all(),
     )
     user = UserAdvertisementSerializer(read_only=True)
+    photos = AdvertPhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = AdvertisementModel
         fields = ('id', 'car_brand', 'car_model', 'engine', 'price',
                   'price_period', 'pledge', 'purpose', 'driver', 'comment',
                   'location', 'fuel_type', 'transmission', 'category', 'user',
-                  'status', 'created_at', 'updated_at',)
+                  'status', 'photos', 'created_at', 'updated_at',)
 
         read_only_fields = ('id', 'created_at', 'updated_at', 'user',)
-

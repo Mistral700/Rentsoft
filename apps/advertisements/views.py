@@ -1,8 +1,17 @@
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework import status
+from rest_framework.generics import (
+    ListAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    GenericAPIView,
+    DestroyAPIView,
+)
 from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 
 from apps.advertisements.models import (
     AdvertisementModel,
+    AdvertisementPhotoModel,
     CategoryModel,
     TransmissionModel,
     FuelTypeModel,
@@ -10,12 +19,13 @@ from apps.advertisements.models import (
 )
 from apps.advertisements.serializers import (
     AdvertisementSerializer,
+    AdvertPhotoSerializer,
     CategorySerializer,
     TransmissionSerializer,
     FuelTypeSerializer,
     StatusSerializer,
 )
-from apps.advertisements.swagger.decorators import adverts_partial_update_swagger
+from apps.advertisements.swagger.decorators import adverts_partial_update_swagger, advert_swagger
 
 
 class CategoryListCreateView(ListCreateAPIView):
@@ -102,7 +112,7 @@ class MineAdvertisementListCreateView(ListCreateAPIView):
             'category',
             'user',
             'status'
-        ).prefetch_related('fuel_type').filter(user=self.request.user)
+        ).prefetch_related('fuel_type').filter(user_id=self.request.user.id)
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -129,4 +139,48 @@ class MineAdvertisementGetUpdateDestroy(RetrieveUpdateDestroyAPIView):
             'category',
             'user',
             'status'
-        ).prefetch_related('fuel_type').filter(user__pk=self.request.user.id)
+        ).prefetch_related('fuel_type').filter(user_id=self.request.user.id)
+
+
+@advert_swagger()
+class AdvertAddPhotoView(GenericAPIView):
+    """
+    Add photo to specific advert
+    """
+    serializer_class = AdvertPhotoSerializer
+
+    def get_queryset(self):
+        return AdvertisementModel.objects.select_related(
+            'transmission',
+            'category',
+            'user',
+            'status'
+        ).prefetch_related('fuel_type').filter(user_id=self.request.user.id)
+
+    def post(self, *args, **kwargs):
+        files = self.request.FILES
+        advert = self.get_object()
+        for key in files:
+            serializer = self.get_serializer(data={'photo': files[key]})
+            serializer.is_valid(raise_exception=True)
+            serializer.save(advert=advert)
+
+        serializer = AdvertisementSerializer(advert)
+        return Response(serializer.data, status.HTTP_201_CREATED)
+
+
+class AdvertRemovePhotoView(DestroyAPIView):
+    """
+    Delete photo from advert by photo id
+    """
+    def get_queryset(self):
+        return AdvertisementPhotoModel.objects.select_related(
+            'advert',
+        ).filter(advert__user_id=self.request.user.id)
+
+    serializer_class = AdvertisementSerializer
+
+    def perform_destroy(self, instance):
+        instance.photo.delete()
+        photo = self.get_object()
+        photo.delete()

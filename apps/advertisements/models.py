@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 
 from apps.users.models import UserModel as User
 
+from core.services.upload_car_photo_service import upload_to
+
 UserModel: User = get_user_model()
 
 
@@ -81,3 +83,11 @@ class AdvertisementModel(models.Model):
     class Meta:
         db_table = 'advertisements'
         ordering = ("id",)
+
+
+class AdvertisementPhotoModel(models.Model):
+    class Meta:
+        db_table = 'adverts_photo'
+
+    photo = models.ImageField(upload_to=upload_to, blank=True)
+    advert = models.ForeignKey(AdvertisementModel, on_delete=models.CASCADE, related_name='photos')

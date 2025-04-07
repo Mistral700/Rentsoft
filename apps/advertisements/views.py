@@ -176,11 +176,15 @@ class AdvertRemovePhotoView(DestroyAPIView):
     def get_queryset(self):
         return AdvertisementPhotoModel.objects.select_related(
             'advert',
-        ).filter(advert__user_id=self.request.user.id)
+            'advert__transmission',
+            'advert__category',
+            'advert__user',
+            'advert__status',
+        ).prefetch_related('advert__fuel_type').filter(advert__user_id=self.request.user.id)
 
     serializer_class = AdvertisementSerializer
 
     def perform_destroy(self, instance):
+        photo: AdvertisementPhotoModel = self.get_object()
         instance.photo.delete()
-        photo = self.get_object()
         photo.delete()

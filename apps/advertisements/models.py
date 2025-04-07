@@ -1,4 +1,5 @@
 from django.db import models
+from django.core import validators as V
 from django.contrib.auth import get_user_model
 
 from apps.users.models import UserModel as User
@@ -49,6 +50,8 @@ class AdvertisementModel(models.Model):
     car_brand = models.CharField(max_length=128)
     car_model = models.CharField(max_length=128)
     engine = models.DecimalField(max_digits=4, decimal_places=2)
+    vin = models.CharField(max_length=17)
+    insurance = models.CharField(max_length=128)
     price = models.FloatField()
     price_period = models.CharField(max_length=128)
     pledge = models.BooleanField()
@@ -89,5 +92,7 @@ class AdvertisementPhotoModel(models.Model):
     class Meta:
         db_table = 'adverts_photo'
 
-    photo = models.ImageField(upload_to=upload_to, blank=True)
+    photo = models.ImageField(upload_to=upload_to, blank=True, validators=(
+        V.FileExtensionValidator(['gif', 'jpeg', 'png', 'jpg']),
+    ))
     advert = models.ForeignKey(AdvertisementModel, on_delete=models.CASCADE, related_name='photos')

@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
-from apps.users.models import UserModel as User
-from apps.users.serializers import UserSerializer
+from apps.users.models import UserModel as User, ProfileModel
+from apps.users.serializers import UserSerializer, ProfileAvatarSerializer
 from apps.advertisements.serializers import AdvertisementSerializer
 from apps.users.swagger.decorators import users_swagger
 from apps.advertisements.swagger.decorators import adverts_swagger
@@ -14,7 +14,7 @@ UserModel: User = get_user_model()
 
 
 @users_swagger()
-class GetAllUsersView(ListAPIView):
+class UserListView(ListAPIView):
     """
     List all users
     (Only for admin)
@@ -22,6 +22,22 @@ class GetAllUsersView(ListAPIView):
     queryset = UserModel.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAdminUser,)
+
+
+class UserAddAvatarView(UpdateAPIView):
+    """
+    Add avatar for user
+    """
+    serializer_class = ProfileAvatarSerializer
+    http_method_names = ('put',)
+
+    def get_object(self):
+        return self.request.user.profile
+
+    def perform_update(self, serializer):
+        profile: ProfileModel = self.get_object()
+        profile.avatar.delete()
+        super().perform_update(serializer)
 
 
 @adverts_swagger()
@@ -33,6 +49,6 @@ class UserAdvertisementsListView(RetrieveAPIView):
     serializer_class = AdvertisementSerializer
 
     def get(self, *args, **kwargs):
-        user = self.get_object()
+        user: UserModel = self.get_object()
         serializer = self.get_serializer(user.advertisement_user, many=True)
         return Response(serializer.data)

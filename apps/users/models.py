@@ -4,6 +4,8 @@ from django.db import models
 
 from apps.users.managers import UserManager
 
+from core.services.upload_user_photo_service import upload_avatar
+
 
 class UserModel(AbstractBaseUser, PermissionsMixin):
     class Meta:
@@ -31,4 +33,7 @@ class ProfileModel(models.Model):
 
     name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
+    avatar = models.ImageField(upload_to=upload_avatar, blank=True, validators=(
+        V.FileExtensionValidator(['gif', 'jpeg', 'png', 'jpg']),
+    ))
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='profile')

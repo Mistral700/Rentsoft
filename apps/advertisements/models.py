@@ -54,6 +54,7 @@ class AdvertisementModel(models.Model):
     insurance = models.CharField(max_length=128)
     price = models.FloatField()
     price_period = models.CharField(max_length=128)
+    mileage = models.CharField(max_length=20)
     pledge = models.BooleanField()
     purpose = models.CharField(max_length=128)
     driver = models.BooleanField()

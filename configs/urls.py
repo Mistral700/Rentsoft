@@ -21,5 +21,6 @@ urlpatterns = [
     path('auth', include('apps.auth.urls')),
     path('advertisements', include('apps.advertisements.urls')),
     path('users', include('apps.users.urls')),
+    path('bookings', include('apps.bookings.urls')),
     path('doc', schema_view.with_ui('swagger', cache_timeout=0)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

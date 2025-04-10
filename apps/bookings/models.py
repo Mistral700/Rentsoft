@@ -25,3 +25,4 @@ class BookingModel(models.Model):
 
     class Meta:
         db_table = 'bookings'
+        ordering = ("id",)

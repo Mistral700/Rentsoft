@@ -1,13 +1,37 @@
 from rest_framework import serializers
 
 from apps.advertisements.models import AdvertisementModel
+from apps.advertisements.serializers import AdvertisementSerializer
 from apps.bookings.models import BookingModel
+
+from core.dataclasses.advertisement_dataclasses import Advertisement
+from core.dataclasses.user_dataclasses import User
+
+
+class AdvertSerializer(serializers.RelatedField):
+    def to_representation(self, value: Advertisement):
+        return AdvertisementSerializer(value).data
+
+    def to_internal_value(self, advert_id):
+        try:
+            return AdvertisementModel.objects.get(id=advert_id)
+        except AdvertisementModel.DoesNotExist:
+            raise serializers.ValidationError('There is no object with that id.')
+
+
+class UserBookingSerializer(serializers.RelatedField):
+    def to_representation(self, value: User):
+        return {
+            'id': value.id,
+            'email': value.email,
+            'name': value.profile.name,
+            'surname': value.profile.surname,
+        }
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    advert = serializers.PrimaryKeyRelatedField(
-        queryset=AdvertisementModel.objects.all(),
-    )
+    advert = AdvertSerializer(queryset=AdvertisementModel.objects.all())
+    user = UserBookingSerializer(read_only=True)
 
     class Meta:
         model = BookingModel

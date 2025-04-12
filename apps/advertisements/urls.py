@@ -1,11 +1,11 @@
 from django.urls import path
 
 from apps.advertisements.views import (
-    AdvertisementsListView,
+    AdvertisementsListCreateView,
     AdvertAddPhotoView,
     AdvertRemovePhotoView,
-    MineAdvertisementListCreateView,
-    MineAdvertisementGetUpdateDestroy,
+    AdvertisementGetUpdateDestroy,
+    MineAdvertisementListView,
     CategoryListCreateView,
     TransmissionListCreateView,
     FuelTypeListCreateView,
@@ -14,9 +14,9 @@ from apps.advertisements.views import (
 
 
 urlpatterns = [
-    path('', AdvertisementsListView.as_view(), name='list_advertisements'),
-    path('/mine', MineAdvertisementListCreateView.as_view(), name='list_create_mine_advertisements'),
-    path('/mine/<int:pk>', MineAdvertisementGetUpdateDestroy.as_view(), name='get_update_destroy_mine_advertisements'),
+    path('', AdvertisementsListCreateView.as_view(), name='list_create_advertisements'),
+    path('/<int:pk>', AdvertisementGetUpdateDestroy.as_view(), name='get_update_destroy_advertisement'),
+    path('/mine', MineAdvertisementListView.as_view(), name='list_mine_advertisements'),
 
     path('/<int:pk>/photo', AdvertAddPhotoView.as_view(), name='add_advert_photo'),
     path('/photo/<int:pk>', AdvertRemovePhotoView.as_view(), name='remove_advert_photo'),

@@ -5,6 +5,12 @@ from apps.bookings.serializers import BookingSerializer
 
 
 class BookingListCreateView(ListCreateAPIView):
+    """
+    get:
+        List all bookings of registered user
+    post:
+        Create booking
+    """
     serializer_class = BookingSerializer
 
     def get_queryset(self):
@@ -23,6 +29,9 @@ class BookingListCreateView(ListCreateAPIView):
 
 
 class ClientsBaseForAdvertsList(ListAPIView):
+    """
+    List a customer base
+    """
     def get_queryset(self):
         return BookingModel.objects.select_related(
             'advert',

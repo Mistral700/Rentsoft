@@ -5,6 +5,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
     GenericAPIView,
     DestroyAPIView,
+    get_object_or_404,
 )
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
@@ -84,9 +85,12 @@ class StatusListCreateView(ListCreateAPIView):
     permission_classes = (IsAdminUser,)
 
 
-class AdvertisementsListView(ListAPIView):
+class AdvertisementsListCreateView(ListCreateAPIView):
     """
-    Get all advertisements
+    get:
+        Get all advertisements
+    post:
+        Create advertisement
     """
     queryset = AdvertisementModel.objects.select_related(
         'user',
@@ -96,13 +100,22 @@ class AdvertisementsListView(ListAPIView):
     ).prefetch_related('fuel_type').all()
     serializer_class = AdvertisementSerializer
 
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user=user)
 
-class MineAdvertisementListCreateView(ListCreateAPIView):
+
+@adverts_partial_update_swagger()
+class AdvertisementGetUpdateDestroy(RetrieveUpdateDestroyAPIView):
     """
     get:
-        Get advertisements of registered user(mine)
-    post:
-        Create advertisement
+        Get specific advert by id
+    put:
+        Update specific advert by id completely
+    patch:
+        Update specific advert by id partly
+    delete:
+        Delete specific advert by id
     """
     serializer_class = AdvertisementSerializer
 
@@ -114,22 +127,18 @@ class MineAdvertisementListCreateView(ListCreateAPIView):
             'status'
         ).prefetch_related('fuel_type').filter(user_id=self.request.user.id)
 
-    def perform_create(self, serializer):
-        user = self.request.user
-        serializer.save(user=user)
+    def get(self, *args, **kwargs):
+        advert_id = kwargs['pk']
+        advert = get_object_or_404(AdvertisementModel, pk=advert_id)
+
+        serializer = self.get_serializer(advert)
+        return Response(serializer.data, status.HTTP_200_OK)
 
 
-@adverts_partial_update_swagger()
-class MineAdvertisementGetUpdateDestroy(RetrieveUpdateDestroyAPIView):
+class MineAdvertisementListView(ListAPIView):
     """
     get:
-        Get specific advert by id
-    put:
-        Update specific advert by id completely
-    patch:
-        Update specific advert by id partly
-    delete:
-        Delete specific advert by id
+        Get advertisements of registered user(mine)
     """
     serializer_class = AdvertisementSerializer
 

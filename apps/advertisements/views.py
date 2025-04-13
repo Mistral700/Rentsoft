@@ -28,77 +28,80 @@ from apps.advertisements.serializers import (
 )
 from apps.advertisements.swagger.decorators import adverts_partial_update_swagger, advert_swagger
 
+from core.permissions import IsSuperUserOrReadOnly
+
 
 class CategoryListCreateView(ListCreateAPIView):
     """
     get:
         Get categories list
-        (Only for admin)
     post:
         Create category
         (Only for admin)
     """
     queryset = CategoryModel.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsSuperUserOrReadOnly,)
 
 
 class TransmissionListCreateView(ListCreateAPIView):
     """
     get:
         Get transmissions list
-        (Only for admin)
     post:
         Create transmission
         (Only for admin)
     """
     queryset = TransmissionModel.objects.all()
     serializer_class = TransmissionSerializer
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsSuperUserOrReadOnly,)
 
 
 class FuelTypeListCreateView(ListCreateAPIView):
     """
     get:
         Get fuel types list
-        (Only for admin)
     post:
         Create fuel type
         (Only for admin)
     """
     queryset = FuelTypeModel.objects.all()
     serializer_class = FuelTypeSerializer
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsSuperUserOrReadOnly,)
 
 
 class StatusListCreateView(ListCreateAPIView):
     """
     get:
         Get statuses list
-        (Only for admin)
     post:
         Create status
         (Only for admin)
     """
     queryset = StatusModel.objects.all()
     serializer_class = StatusSerializer
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsSuperUserOrReadOnly,)
 
 
-class AdvertisementsListCreateView(ListCreateAPIView):
+class MineAdvertisementsListCreateView(ListCreateAPIView):
     """
     get:
-        Get all advertisements
+        Get all mine advertisements
+        (Only for business)
     post:
         Create advertisement
+        (Only for business)
     """
-    queryset = AdvertisementModel.objects.select_related(
-        'user',
-        'transmission',
-        'category',
-        'status'
-    ).prefetch_related('fuel_type').all()
     serializer_class = AdvertisementSerializer
+    permission_classes = (IsAdminUser,)
+
+    def get_queryset(self):
+        return AdvertisementModel.objects.select_related(
+            'user',
+            'transmission',
+            'category',
+            'status'
+        ).prefetch_related('fuel_type').filter(user_id=self.request.user.id)
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -106,41 +109,23 @@ class AdvertisementsListCreateView(ListCreateAPIView):
 
 
 @adverts_partial_update_swagger()
-class AdvertisementGetUpdateDestroy(RetrieveUpdateDestroyAPIView):
+class MineAdvertisementsGetUpdateDestroy(RetrieveUpdateDestroyAPIView):
     """
     get:
         Get specific advert by id
+        (Only for business)
     put:
         Update specific advert by id completely
+        (Only for business)
     patch:
         Update specific advert by id partly
+        (Only for business)
     delete:
         Delete specific advert by id
+        (Only for business)
     """
     serializer_class = AdvertisementSerializer
-
-    def get_queryset(self):
-        return AdvertisementModel.objects.select_related(
-            'transmission',
-            'category',
-            'user',
-            'status'
-        ).prefetch_related('fuel_type').filter(user_id=self.request.user.id)
-
-    def get(self, *args, **kwargs):
-        advert_id = kwargs['pk']
-        advert = get_object_or_404(AdvertisementModel, pk=advert_id)
-
-        serializer = self.get_serializer(advert)
-        return Response(serializer.data, status.HTTP_200_OK)
-
-
-class MineAdvertisementListView(ListAPIView):
-    """
-    get:
-        Get advertisements of registered user(mine)
-    """
-    serializer_class = AdvertisementSerializer
+    permission_classes = (IsAdminUser,)
 
     def get_queryset(self):
         return AdvertisementModel.objects.select_related(
@@ -157,6 +142,7 @@ class AdvertAddPhotoView(GenericAPIView):
     Add photo to specific advert
     """
     serializer_class = AdvertPhotoSerializer
+    permission_classes = (IsAdminUser,)
 
     def get_queryset(self):
         return AdvertisementModel.objects.select_related(
@@ -192,6 +178,7 @@ class AdvertRemovePhotoView(DestroyAPIView):
         ).prefetch_related('advert__fuel_type').filter(advert__user_id=self.request.user.id)
 
     serializer_class = AdvertisementSerializer
+    permission_classes = (IsAdminUser,)
 
     def perform_destroy(self, instance):
         photo: AdvertisementPhotoModel = self.get_object()

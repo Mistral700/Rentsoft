@@ -15,6 +15,7 @@ from apps.advertisements.models import AdvertisementModel
 from apps.advertisements.serializers import AdvertisementSerializer
 from apps.users.swagger.decorators import users_swagger
 from apps.advertisements.swagger.decorators import adverts_swagger
+from apps.bookings.serializers import BookingSerializer
 
 from core.permissions import IsSuperUser
 
@@ -80,3 +81,17 @@ class UserAdvertisementsRetrieveView(RetrieveAPIView):
 
         serializer = self.get_serializer(advert)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserBookingsListView(ListAPIView):
+    """
+    List all bookings by user id
+    """
+    queryset = UserModel.objects.all()
+    serializer_class = BookingSerializer
+    permission_classes = (IsSuperUser,)
+
+    def get(self, *args, **kwargs):
+        user: UserModel = self.get_object()
+        serializer = self.get_serializer(user.booking_user, many=True)
+        return Response(serializer.data)

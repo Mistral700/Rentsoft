@@ -5,6 +5,7 @@ from apps.users.views import (
     UserAdvertisementsListView,
     UserAddAvatarView,
     UserAdvertisementsRetrieveView,
+    UserBookingsListView,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path('/<int:pk>/advertisements', UserAdvertisementsListView.as_view(), name='list_advertisements_by_user'),
     path('/<int:pk>/advertisements/<int:advert_id>', UserAdvertisementsRetrieveView.as_view(),
          name='retrieve_user_advertisement'),
+    path('/<int:pk>/bookings', UserBookingsListView.as_view(), name='list_bookings_by_user')
 ]

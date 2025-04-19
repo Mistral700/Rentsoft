@@ -40,7 +40,7 @@ class CategoryModel(models.Model):
 
 
 class StatusModel(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -50,7 +50,7 @@ class AdvertisementModel(models.Model):
     car_brand = models.CharField(max_length=128)
     car_model = models.CharField(max_length=128)
     engine = models.DecimalField(max_digits=4, decimal_places=2)
-    vin = models.CharField(max_length=17)
+    vin = models.CharField(max_length=17, unique=True)
     insurance = models.CharField(max_length=128)
     price = models.FloatField()
     price_period = models.CharField(max_length=128)

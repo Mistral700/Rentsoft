@@ -1,11 +1,9 @@
 from rest_framework import status
 from rest_framework.generics import (
-    ListAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
     GenericAPIView,
     DestroyAPIView,
-    get_object_or_404,
 )
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
@@ -100,7 +98,7 @@ class MineAdvertisementsListCreateView(ListCreateAPIView):
             'user',
             'transmission',
             'category',
-            'status'
+            'status',
         ).prefetch_related('fuel_type').filter(user_id=self.request.user.id)
 
     def perform_create(self, serializer):

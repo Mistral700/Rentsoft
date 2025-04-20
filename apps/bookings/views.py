@@ -40,4 +40,9 @@ class ClientsBaseForAdvertsList(ListAPIView):
     def get_queryset(self):
         return UserModel.objects.filter(
             booking_user__advert__user=self.request.user
-        ).distinct()
+        ).distinct().select_related(
+            'profile',
+        ).prefetch_related(
+            'booking_user__advert__user',
+            'booking_user__advert__fuel_type',
+        )

@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='RentID_API',
+        title='Rentsoft_API',
         default_version='v1',
         description='About cars sharing',
     ),
@@ -18,9 +18,9 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('auth', include('apps.auth.urls')),
-    path('advertisements', include('apps.advertisements.urls')),
-    path('users', include('apps.users.urls')),
-    path('bookings', include('apps.bookings.urls')),
-    path('doc', schema_view.with_ui('swagger', cache_timeout=0)),
+    path('api/auth', include('apps.auth.urls')),
+    path('api/advertisements', include('apps.advertisements.urls')),
+    path('api/users', include('apps.users.urls')),
+    path('api/bookings', include('apps.bookings.urls')),
+    path('api/doc', schema_view.with_ui('swagger', cache_timeout=0), name='documentation'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

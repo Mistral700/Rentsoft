@@ -12,11 +12,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         db_table = 'auth_user'
 
     email = models.EmailField(unique=True)
-    password = models.CharField(validators=[V.RegexValidator(
-        regex=r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{8,}$',
-        message="The password must contain at least 8 characters,\
-        at least one letter, one number, one special character, and no spaces."
-    )])
+    password = models.CharField(max_length=128)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

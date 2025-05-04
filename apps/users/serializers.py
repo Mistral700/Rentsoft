@@ -2,8 +2,10 @@ from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.db.transaction import atomic
 
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, ValidationError
 
+import os, re
 from apps.users.models import ProfileModel
 
 
@@ -46,6 +48,17 @@ class UserSerializer(ModelSerializer):
                 'write_only': True
             }
         }
+
+    def validate_password(self, value):
+        pattern = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{8,}$'
+        safe_password = os.environ.get("SAFE_PASSWORD_VALIDATION") == "True"
+
+        if safe_password and not re.match(pattern, value):
+            raise serializers.ValidationError(
+                "The password must contain at least 8 characters, "
+                "at least one letter, one number, one special character, and no spaces."
+            )
+        return value
 
     @atomic
     def create(self, validated_data: dict):

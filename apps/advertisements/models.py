@@ -49,7 +49,7 @@ class StatusModel(models.Model):
 class AdvertisementModel(models.Model):
     car_brand = models.CharField(max_length=128)
     car_model = models.CharField(max_length=128)
-    engine = models.DecimalField(max_digits=4, decimal_places=2)
+    engine = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
     vin = models.CharField(max_length=17, unique=True)
     insurance = models.CharField(max_length=128)
     price = models.FloatField()

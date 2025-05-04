@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY') or 'secret'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'True' or False
 
-ALLOWED_HOSTS = ["rentsoft.us-east-1.elasticbeanstalk.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 # Application definition
 

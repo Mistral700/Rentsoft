@@ -40,9 +40,9 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingModel
         fields = ('id', 'date_from', 'date_to', 'advert',
-                  'user', 'created_at', 'updated_at',)
+                  'user', 'is_active', 'created_at', 'updated_at',)
 
-        read_only_fields = ('id', 'created_at', 'updated_at', 'user',)
+        read_only_fields = ('id', 'created_at', 'updated_at', 'user', 'is_active',)
 
 
 class ClientBookingSerializer(UserSerializer):

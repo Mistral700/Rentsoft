@@ -40,10 +40,21 @@ class CategoryModel(models.Model):
 
 
 class StatusModel(models.Model):
+    BOOKED_STATUS = "Booked"
+    AVAILABLE_STATUS = "Available"
+
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return f'{self.name}'
+
+    @staticmethod
+    def get_booked_status():
+        return StatusModel.objects.get(name=StatusModel.BOOKED_STATUS)
+
+    @staticmethod
+    def get_available_status():
+        return StatusModel.objects.get(name=StatusModel.AVAILABLE_STATUS)
 
 
 class AdvertisementModel(models.Model):

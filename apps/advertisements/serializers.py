@@ -61,9 +61,6 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(
         queryset=CategoryModel.objects.all(),
     )
-    status = serializers.PrimaryKeyRelatedField(
-        queryset=StatusModel.objects.all(),
-    )
     user = UserAdvertisementSerializer(read_only=True)
     photos = AdvertPhotoSerializer(many=True, read_only=True)
 
@@ -75,4 +72,4 @@ class AdvertisementSerializer(serializers.ModelSerializer):
                   'location', 'fuel_type', 'transmission', 'category',
                   'user', 'status', 'photos', 'created_at', 'updated_at',)
 
-        read_only_fields = ('id', 'created_at', 'updated_at', 'user',)
+        read_only_fields = ('id', 'created_at', 'updated_at', 'user', 'status')

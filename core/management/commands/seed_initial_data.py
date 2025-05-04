@@ -1,15 +1,20 @@
 from django.core.management.base import BaseCommand
-from apps.advertisements.models import CategoryModel, TransmissionModel, FuelTypeModel, StatusModel
+from apps.advertisements.models import (
+    CategoryModel,
+    TransmissionModel,
+    FuelTypeModel,
+    StatusModel,
+)
 
 
 class Command(BaseCommand):
     help = 'Seeds the database with initial categories, transmissions and fuel types'
 
     def handle(self, *args, **kwargs):
-        category_names = ['Седан', 'Універсал', 'Хетчбек', 'Позашляховик', 'Купе', 'Кабріолет']
-        transmission_names = ['Механіка', 'Автомат', 'Робот', 'Варіатор']
-        fuel_type_names = ['Бензин', 'Дизель', 'Газ', 'Електро', 'Гібрид']
-        status_names = ["Вільне", "У сервісі", "Простій", "Поломка", "Заброньовано"]
+        category_names = ["Sedan", "Station Wagon", "Hatchback", "SUV", "Coupe", "Convertible"]
+        transmission_names = ["Manual", "Automatic", "Robot", "CVT"]
+        fuel_type_names = ["Petrol", "Diesel", "Gas", "Electric", "Hybrid"]
+        status_names = ["Available", "In Service", "Idle", "Broken", "Booked"]
 
         existing_categories = set(CategoryModel.objects.values_list('name', flat=True))
         existing_transmissions = set(TransmissionModel.objects.values_list('name', flat=True))

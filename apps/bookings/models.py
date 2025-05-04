@@ -20,6 +20,7 @@ class BookingModel(models.Model):
         on_delete=models.CASCADE,
         related_name='booking_user',
     )
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -102,8 +102,9 @@ class MineAdvertisementsListCreateView(ListCreateAPIView):
         ).prefetch_related('fuel_type').filter(user_id=self.request.user.id)
 
     def perform_create(self, serializer):
+        status_available = StatusModel.objects.get(name="Available")
         user = self.request.user
-        serializer.save(user=user)
+        serializer.save(user=user, status=status_available)
 
 
 @adverts_partial_update_swagger()

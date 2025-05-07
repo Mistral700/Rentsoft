@@ -47,6 +47,16 @@ class BookingListCreateView(ListCreateAPIView):
 
 
 class BookingRetrieveUpdateRejectView(RetrieveUpdateDestroyAPIView):
+    """
+    get:
+        Return a specific booking by id made by the authenticated user.
+    put:
+        Update a specific booking by id made by the authenticated user.
+    patch:
+        Update partially a specific booking by id made by the authenticated user.
+    delete:
+        Cancel a specific booking by id made by the authenticated user.
+    """
     serializer_class = BookingSerializer
 
     def get_queryset(self):

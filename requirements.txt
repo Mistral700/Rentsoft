@@ -23,3 +23,4 @@ typing-extensions==4.12.2 ; python_version >= "3.11" and python_version < "3.13"
 tzdata==2025.1 ; python_version >= "3.11" and sys_platform == "win32"
 uritemplate==4.1.1 ; python_version >= "3.11"
 django-cors-headers==4.7.0
+django-filter==25.1

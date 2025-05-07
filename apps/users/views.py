@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 from rest_framework.generics import(
     ListAPIView,
@@ -11,6 +12,7 @@ from rest_framework import status
 
 from apps.users.models import UserModel as User, ProfileModel
 from apps.users.serializers import UserSerializer, ProfileAvatarSerializer
+from apps.users.filters import AdvertisementFilter
 from apps.advertisements.models import AdvertisementModel
 from apps.advertisements.serializers import AdvertisementSerializer
 from apps.users.swagger.decorators import users_swagger
@@ -50,17 +52,17 @@ class UserAddAvatarView(UpdateAPIView):
 
 
 @adverts_swagger()
-class UserAdvertisementsListView(RetrieveAPIView):
+class UserAdvertisementsListView(ListAPIView):
     """
     List all advertisements by user id
     """
-    queryset = UserModel.objects.all()
     serializer_class = AdvertisementSerializer
+    filterset_class = AdvertisementFilter
 
-    def get(self, *args, **kwargs):
-        user: UserModel = self.get_object()
-        serializer = self.get_serializer(user.advertisement_user, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        user_id = self.kwargs.get("pk")
+        user = get_object_or_404(UserModel, pk=user_id)
+        return AdvertisementModel.objects.filter(user=user)
 
 
 class UserAdvertisementsRetrieveView(RetrieveAPIView):

@@ -25,5 +25,7 @@ urlpatterns = [
     path('api/advertisements', include('apps.advertisements.urls')),
     path('api/users', include('apps.users.urls')),
     path('api/bookings', include('apps.bookings.urls')),
+    path('api/diia', include('apps.diia.urls')),
+
     path('api/doc', schema_view.with_ui('swagger', cache_timeout=0), name='documentation'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

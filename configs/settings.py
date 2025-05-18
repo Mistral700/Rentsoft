@@ -44,9 +44,10 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'apps.auth',
-    'apps.advertisements',
-    'apps.users',
     'apps.bookings',
+    'apps.advertisements',
+    'apps.diia',
+    'apps.users',
     'core',
 ]
 

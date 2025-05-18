@@ -1,6 +1,7 @@
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.http import JsonResponse
 
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -18,6 +19,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path("api/health", lambda request: JsonResponse({"status": "ok"})),
+
     path('api/auth', include('apps.auth.urls')),
     path('api/advertisements', include('apps.advertisements.urls')),
     path('api/users', include('apps.users.urls')),

@@ -162,3 +162,9 @@ CORS_ALLOW_HEADERS = [
 
 # Or allow all origins for development (less secure):
 CORS_ALLOW_ALL_ORIGINS = True
+
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
